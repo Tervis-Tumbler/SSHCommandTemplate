@@ -28,6 +28,16 @@ function New-SSHCommandTemplate {
     New-StringTemplateFile -String $SSHCommandResults.output -TemplateName $TemplateName -ModuleName $ModuleName -TemplateType $TemplateType
 }
 
+function Edit-SSHCommandTemplate {
+    param (        
+        $Command,
+        $ModuleName,
+        [ValidateSet("FlashExtract","Regex")]$TemplateType = "FlashExtract"
+    )
+    $TemplateName = Get-SSHCommandTemplateName -Command $Command   
+    Edit-StringTemplateFile -TemplateName $TemplateName -ModuleName $ModuleName -TemplateType $TemplateType
+}
+
 function Get-SSHCommandTemplateName {
     param (
         $Command
