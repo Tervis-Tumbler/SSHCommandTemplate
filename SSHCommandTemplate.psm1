@@ -18,7 +18,7 @@
 
 function New-SSHCommandTemplate {
     param (
-        $SSHSession = (Get-SSHSession),
+        $SSHSession,
         $Command,
         $ModuleName,
         [ValidateSet("FlashExtract","Regex")]$TemplateType = "FlashExtract"
