@@ -8,7 +8,7 @@
     $TemplateName = Get-SSHCommandTemplateName -Command $Command
 
     $SSHCommandResults = Invoke-SSHCommand -Command $Command -Index $SSHSession.SessionID
-    ForEach ($SSHCommandResult in $SSHCommandResults) {        
+    ForEach ($SSHCommandResult in $SSHCommandResults) {
         $Objects = Invoke-StringTemplateToPSCustomObject -String $SSHCommandResult.output -TemplateName $TemplateName -ModuleName $ModuleName -TemplateType $TemplateType
         $Objects | Add-Member -MemberType NoteProperty -Name Host -Value $SSHCommandResult.Host
         $Results += $Objects
