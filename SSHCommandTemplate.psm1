@@ -1,19 +1,24 @@
 ﻿function Invoke-SSHCommandWithTemplate {
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         $SSHSession,
         $Command,
         $ModuleName,
         [ValidateSet("FlashExtract","Regex")]$TemplateType = "FlashExtract"
     )
-    $TemplateName = Get-SSHCommandTemplateName -Command $Command
+    if ($PSCmdlet.ShouldProcess($SSHSession.Host)) {
+        $TemplateName = Get-SSHCommandTemplateName -Command $Command
 
-    $SSHCommandResults = Invoke-SSHCommand -Command $Command -Index $SSHSession.SessionID
-    ForEach ($SSHCommandResult in $SSHCommandResults) {
-        $Objects = Invoke-StringTemplateToPSCustomObject -String $SSHCommandResult.output -TemplateName $TemplateName -ModuleName $ModuleName -TemplateType $TemplateType
-        $Objects | Add-Member -MemberType NoteProperty -Name Host -Value $SSHCommandResult.Host
-        $Results += $Objects
+        $SSHCommandResults = Invoke-SSHCommand -Command $Command -Index $SSHSession.SessionID
+        ForEach ($SSHCommandResult in $SSHCommandResults) {
+            $Objects = Invoke-StringTemplateToPSCustomObject -String $SSHCommandResult.output -TemplateName $TemplateName -ModuleName $ModuleName -TemplateType $TemplateType
+            $Objects | Add-Member -MemberType NoteProperty -Name Host -Value $SSHCommandResult.Host
+            $Results += $Objects
+        }
+        $Results
+    } else {
+        $Command
     }
-    $Results
 }
 
 function New-SSHCommandTemplate {
